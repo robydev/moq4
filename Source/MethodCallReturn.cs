@@ -62,10 +62,9 @@ namespace Moq
 		public bool HasReturnValue { get; protected set; }
 	}
 
-	internal sealed partial class MethodCallReturn<TMock, TResult> : MethodCallReturn, ISetup<TMock, TResult>, ISetupGetter<TMock, TResult>, IReturnsResult<TMock>
+	internal partial class MethodCallReturn<TMock, TResult> : MethodCallReturn, ISetup<TMock, TResult>, ISetupGetter<TMock, TResult>, IReturnsResult<TMock>
 		where TMock : class
 	{
-		private Delegate valueDel = (Func<TResult>)(() => default(TResult));
 		private Action<object[]> afterReturnCallback;
 		private bool callBase;
 
@@ -73,6 +72,7 @@ namespace Moq
 			: base(mock, condition, originalExpression, method, arguments)
 		{
 			this.HasReturnValue = false;
+			this.ValueDelegate = (Func<TResult>)(() => default(TResult));
 		}
 
 		public IVerifies Raises(Action<TMock> eventExpression, EventArgs args)
@@ -124,11 +124,11 @@ namespace Moq
 		{
 			if (value == null)
 			{
-				this.valueDel = (Func<TResult>)(() => default(TResult));
+				this.ValueDelegate = (Func<TResult>)(() => default(TResult));
 			}
 			else
 			{
-				this.valueDel = value;
+				this.ValueDelegate = value;
 			}
 
 			this.HasReturnValue = true;
@@ -163,14 +163,29 @@ namespace Moq
 			base.Execute(call);
 
 			if (callBase)
+			{
 				call.InvokeBase();
-			else if (valueDel.HasCompatibleParameterList(new ParameterInfo[] { }))
-				call.ReturnValue = valueDel.InvokePreserveStack();   //we need this, for the user to be able to use parameterless methods
+			}
+			else if (ValueDelegate.HasCompatibleParameterList(new ParameterInfo[] { }))  //we need this, for the user to be able to use parameterless methods
+			{
+				call.ReturnValue = GetReturnValueFromDelegate(call, null);
+			}
 			else
-				call.ReturnValue = valueDel.InvokePreserveStack(call.Arguments); //will throw if parameters mismatch
+			{
+				call.ReturnValue = GetReturnValueFromDelegate(call, call.Arguments);
+			}
 
 			if (afterReturnCallback != null)
+			{
 				afterReturnCallback(call.Arguments);
+			}
 		}
+
+		protected virtual object GetReturnValueFromDelegate(ICallContext call, object[] arguments)
+		{
+			return ValueDelegate.InvokePreserveStack(arguments);
+		}
+
+		protected Delegate ValueDelegate { get; private set; }
 	}
 }

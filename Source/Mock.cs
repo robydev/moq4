@@ -49,6 +49,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Moq
 {
@@ -978,6 +979,57 @@ namespace Moq
 
 		#endregion
 
+		#region SetupAsync
+
+		internal static AsyncMethodCall<T> SetupAsync<T>(Mock<T> mock, Expression<Func<T, Task>> expression, Condition condition)
+			where T : class
+		{
+			return PexProtector.Invoke(() =>
+			{
+				var methodCall = expression.GetCallInfo(mock);
+				var method = methodCall.Method;
+				var args = methodCall.Arguments.ToArray();
+
+				ThrowIfNotMember(expression, method);
+				ThrowIfCantOverride(expression, method);
+				var call = new AsyncMethodCall<T>(mock, condition, expression, method, args);
+
+				var targetInterceptor = GetInterceptor(methodCall.Object, mock);
+
+				targetInterceptor.AddCall(call, SetupKind.Other);
+
+				return call;
+			});
+		}
+
+		internal static AsyncMethodCallReturn<T, TResult> SetupAsync<T, TResult>(Mock<T> mock, Expression<Func<T, Task<TResult>>> expression, Condition condition)
+			where T : class
+		{
+			return PexProtector.Invoke(() =>
+			{
+				if (expression.IsProperty())
+				{
+					throw new Exception("Cannot register a property as an async setup.");
+				}
+
+				var methodCall = expression.GetCallInfo(mock);
+				var method = methodCall.Method;
+				var args = methodCall.Arguments.ToArray();
+
+				ThrowIfNotMember(expression, method);
+				ThrowIfCantOverride(expression, method);
+				var call = new AsyncMethodCallReturn<T, TResult>(mock, condition, expression, method, args);
+
+				var targetInterceptor = GetInterceptor(methodCall.Object, mock);
+
+				targetInterceptor.AddCall(call, SetupKind.Other);
+
+				return call;
+			});
+		}
+
+		#endregion
+
 		#region Raise
 
 		/// <summary>
@@ -1023,7 +1075,7 @@ namespace Moq
 		/// <include file='Mock.xdoc' path='docs/doc[@for="Mock.As{TInterface}"]/*'/>
 		[SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "As", Justification = "We want the method called exactly as the keyword because that's what it does, it adds an implemented interface so that you can cast it later.")]
 		public virtual Mock<TInterface> As<TInterface>()
-			where TInterface : class
+	where TInterface : class
 		{
 			var index = this.ImplementedInterfaces.LastIndexOf(typeof(TInterface));
 

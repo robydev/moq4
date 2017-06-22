@@ -47,6 +47,7 @@ using Moq.Proxy;
 using Moq.Language;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 
 #if FEATURE_CODEDOM
 using System.CodeDom;
@@ -263,14 +264,14 @@ namespace Moq
 		{
 			return Mock.Setup<T>(this, expression, null);
 		}
-
+		
 		/// <include file='Mock.Generic.xdoc' path='docs/doc[@for="Mock{T}.Setup{TResult}"]/*'/>
 		[SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design")]
 		public ISetup<T, TResult> Setup<TResult>(Expression<Func<T, TResult>> expression)
 		{
 			return Mock.Setup(this, expression, null);
 		}
-
+		
 		/// <include file='Mock.Generic.xdoc' path='docs/doc[@for="Mock{T}.SetupGet"]/*'/>
 		[SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design")]
 		public ISetupGetter<T, TProperty> SetupGet<TProperty>(Expression<Func<T, TProperty>> expression)
@@ -314,6 +315,24 @@ namespace Moq
 		{
 			SetupAllProperties(this);
 			return this;
+		}
+
+#endregion
+
+#region SetupAsync
+				
+		/// <include file='Mock.Generic.xdoc' path='docs/doc[@for="Mock{T}.SetupAsync"]/*'/>
+		[SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design")]
+		public ISetupAsync<T> SetupAsync(Expression<Func<T, Task>> expression)
+		{
+			return Mock.SetupAsync<T>(this, expression, null);
+		}
+
+		/// <include file='Mock.Generic.xdoc' path='docs/doc[@for="Mock{T}.SetupAsync{TResult}"]/*'/>
+		[SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design")]
+		public ISetupAsync<T, TResult> SetupAsync<TResult>(Expression<Func<T, Task<TResult>>> expression)
+		{
+			return Mock.SetupAsync(this, expression, null);
 		}
 
 #endregion

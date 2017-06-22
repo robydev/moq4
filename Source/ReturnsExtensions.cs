@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Moq.Language;
 using Moq.Language.Flow;
+using System.ComponentModel;
 
 namespace Moq
 {
@@ -17,6 +18,8 @@ namespace Moq
 		/// <typeparam name="TResult">Type of the return value.</typeparam>
 		/// <param name="mock">Returns verb which represents the mocked type and the task of return type</param>
 		/// <param name="value">The value to return, or <see longword="null"/>.</param>
+		[Obsolete("Use SetupAsync intead.")]
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static IReturnsResult<TMock> ReturnsAsync<TMock, TResult>(this IReturns<TMock, Task<TResult>> mock, TResult value) where TMock : class
 		{
 			return mock.ReturnsAsync(() => value);
@@ -29,6 +32,8 @@ namespace Moq
 		/// <typeparam name="TResult">Type of the return value.</typeparam>
 		/// <param name="mock">Returns verb which represents the mocked type and the task of return type</param>
 		/// <param name="valueFunction">The function that will calculate the return value.</param>
+		[Obsolete("Use SetupAsync intead.")]
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static IReturnsResult<TMock> ReturnsAsync<TMock, TResult>(this IReturns<TMock, Task<TResult>> mock, Func<TResult> valueFunction) where TMock : class
 		{
 			return mock.Returns(() => Task.FromResult(valueFunction()));
@@ -40,6 +45,8 @@ namespace Moq
 		/// <typeparam name="TMock">Mocked type.</typeparam>
 		/// <param name="mock">Returns verb which represents the mocked type and the task return type</param>
 		/// <param name="exception">Exception instance to throw.</param>
+		[Obsolete("Use SetupAsync intead.")]
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static IReturnsResult<TMock> ThrowsAsync<TMock>(this IReturns<TMock, Task> mock, Exception exception) where TMock : class
 		{
 			var tcs = new TaskCompletionSource<bool>();
@@ -55,6 +62,8 @@ namespace Moq
 		/// <typeparam name="TResult">Type of the return value.</typeparam>
 		/// <param name="mock">Returns verb which represents the mocked type and the task of return type</param>
 		/// <param name="exception">Exception instance to throw.</param>
+		[Obsolete("Use SetupAsync intead.")]
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static IReturnsResult<TMock> ThrowsAsync<TMock, TResult>(this IReturns<TMock, Task<TResult>> mock, Exception exception) where TMock : class
 		{
 			var tcs = new TaskCompletionSource<TResult>();
@@ -68,6 +77,8 @@ namespace Moq
 		/// <summary>
 		/// Allows to specify the delayed return value of an asynchronous method.
 		/// </summary>
+		[Obsolete("Use SetupAsync intead.")]
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static IReturnsResult<TMock> ReturnsAsync<TMock, TResult>(this IReturns<TMock, Task<TResult>> mock,
 			TResult value, TimeSpan delay) where TMock : class
 		{
@@ -77,6 +88,8 @@ namespace Moq
 		/// <summary>
 		/// Allows to specify the delayed return value of an asynchronous method.
 		/// </summary>
+		[Obsolete("Use SetupAsync intead.")]
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static IReturnsResult<TMock> ReturnsAsync<TMock, TResult>(this IReturns<TMock, Task<TResult>> mock,
 			TResult value, TimeSpan minDelay, TimeSpan maxDelay) where TMock : class
 		{
@@ -89,6 +102,8 @@ namespace Moq
 		/// <para>Allows to specify the delayed return value of an asynchronous method.</para>
 		/// <para>Use the <see cref="Random"/> argument to pass in (seeded) random generators used across your unit test.</para>
 		/// </summary>
+		[Obsolete("Use SetupAsync intead.")]
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static IReturnsResult<TMock> ReturnsAsync<TMock, TResult>(this IReturns<TMock, Task<TResult>> mock,
 			TResult value, TimeSpan minDelay, TimeSpan maxDelay, Random random) where TMock : class
 		{
@@ -103,6 +118,8 @@ namespace Moq
 		/// <summary>
 		/// Allows to specify the exception thrown by an asynchronous method.
 		/// </summary>
+		[Obsolete("Use SetupAsync intead.")]
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static IReturnsResult<TMock> ThrowsAsync<TMock, TResult>(this IReturns<TMock, Task<TResult>> mock,
 			Exception exception, TimeSpan delay) where TMock : class
 		{
@@ -112,6 +129,8 @@ namespace Moq
 		/// <summary>
 		/// Allows to specify the exception thrown by an asynchronous method.
 		/// </summary>
+		[Obsolete("Use SetupAsync intead.")]
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static IReturnsResult<TMock> ThrowsAsync<TMock, TResult>(this IReturns<TMock, Task<TResult>> mock,
 			Exception exception, TimeSpan minDelay, TimeSpan maxDelay) where TMock : class
 		{
@@ -124,6 +143,8 @@ namespace Moq
 		/// <para>Allows to specify the exception thrown by an asynchronous method.</para> 
 		/// <para>Use the <see cref="Random"/> argument to pass in (seeded) random generators used across your unit test.</para>
 		/// </summary>
+		[Obsolete("Use SetupAsync intead.")]
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public static IReturnsResult<TMock> ThrowsAsync<TMock, TResult>(this IReturns<TMock, Task<TResult>> mock,
 			Exception exception, TimeSpan minDelay, TimeSpan maxDelay, Random random) where TMock : class
 		{

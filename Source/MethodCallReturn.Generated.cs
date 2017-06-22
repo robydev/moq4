@@ -5,7 +5,7 @@ using Moq.Language.Flow;
 
 namespace Moq
 {
-	internal sealed partial class MethodCallReturn<TMock, TResult>
+	internal partial class MethodCallReturn<TMock, TResult>
 	{
 		public IVerifies Raises<T>(Action<TMock> eventExpression, Func<T, EventArgs> func)
 		{
